@@ -45,12 +45,22 @@ describe('Sort CSV', () => {
 
     assert.equal(splitColumns(line).length, 4);
   });
+  describe('Sorting', () => {
+    it('should return an array', () => {
+      assert.ok(sortCSV(fixture) instanceof Array);
+    });
+  });
 });
 
 function sortCSV(csv) {
   if (typeof csv != 'string') {
     throw new TypeError();
   }
+  const lines = splitLines(csv);
+  lines.forEach((line) => {
+    line = splitColumns(line);
+  });
+  return lines;
 }
 function splitLines(lines='') {
   return lines.split('\n');
