@@ -40,6 +40,11 @@ describe('Sort CSV', () => {
       assert.equal(splitLines(csv).length, 2);
     });
   });
+  describe('Split Columns', () => {
+    let line = 'this, is, a, line';
+
+    assert.equal(splitColumns(line).length, 4);
+  });
 });
 
 function sortCSV(csv) {
@@ -49,6 +54,9 @@ function sortCSV(csv) {
 }
 function splitLines(lines='') {
   return lines.split('\n');
+}
+function splitColumns(line) {
+  return line.split(',');
 }
 
 class TypeError {}
