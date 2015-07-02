@@ -8,6 +8,7 @@
 import assert from 'assert'
 import fs from 'fs'
 import sinon from 'sinon'
+import {sortCSV, splitColumns, splitLines, TypeError, sortAlphanumeric} from '../src/index.js'
 
 assert.calledWith = sinon.calledWith;
 
@@ -92,30 +93,3 @@ describe('Sort CSV', () => {
     });
   });
 });
-
-function sortCSV(csv) {
-  if (typeof csv != 'string') {
-    throw new TypeError();
-  }
-  let lines = splitLines(csv);
-  lines = lines.map(splitColumns);
-  lines = lines.filter(String);
-  lines = lines.sort((a, b) => {
-    if(a[1] == b[1]) {
-      return sortAlphanumeric(a[0], b[0]);
-    }
-    return sortAlphanumeric(a[1], b[1]);
-  });
-  return lines;
-}
-function splitLines(lines='') {
-  return lines.split('\n');
-}
-function splitColumns(line) {
-  return line.split(',');
-}
-function sortAlphanumeric(a='zzz', b='zzz') {
-  return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
-}
-
-class TypeError {}
