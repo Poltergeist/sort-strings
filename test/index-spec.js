@@ -46,19 +46,19 @@ describe('Sort CSV', () => {
     assert.equal(splitColumns(line).length, 4);
   });
   describe('sortAlphanumeric', () => {
-    it('should return 1 if a and b are passed to the function',() => {
-      assert.equal(sortAlphanumeric('a', 'b'), 1);
+    it('should return -1 if a and b are passed to the function',() => {
+      assert.equal(sortAlphanumeric('a', 'b'), -1);
     });
 
-    it('should return -1 if b and a are passed to the function',() => {
-      assert.equal(sortAlphanumeric('b', 'a'), -1);
+    it('should return 1 if b and a are passed to the function',() => {
+      assert.equal(sortAlphanumeric('b', 'a'), 1);
     });
-    it('should return 1 if A and B are passed to the function',() => {
-      assert.equal(sortAlphanumeric('A', 'B'), 1);
+    it('should return -1 if A and B are passed to the function',() => {
+      assert.equal(sortAlphanumeric('A', 'B'), -1);
     });
 
-    it('should return -1 if B and A are passed to the function',() => {
-      assert.equal(sortAlphanumeric('B', 'A'), -1);
+    it('should return 1 if B and A are passed to the function',() => {
+      assert.equal(sortAlphanumeric('B', 'A'), 1);
     });
   })
   describe('Sorting', () => {
@@ -73,7 +73,11 @@ describe('Sort CSV', () => {
 
     it('should sort second CSV column alpha numeric', () => {
       let result = sortCSV(fixture);
-      assert.equal(result[0][1], 'Borussia Dortmund');
+      let lastItem = '0'
+      result.forEach((item) => {
+        assert.ok(item[1].toLowerCase() >= lastItem);
+        lastItem = item;
+      });
     });
   });
 });
@@ -83,7 +87,12 @@ function sortCSV(csv) {
     throw new TypeError();
   }
   let lines = splitLines(csv);
-  return lines.map(splitColumns);
+  lines = lines.map(splitColumns);
+  lines = lines.sort((a, b) => {
+    return sortAlphanumeric(a[1], b[1]);
+  });
+  lines = lines.filter(String);
+  return lines;
 }
 function splitLines(lines='') {
   return lines.split('\n');
@@ -92,7 +101,7 @@ function splitColumns(line) {
   return line.split(',');
 }
 function sortAlphanumeric(a='zzz', b='zzz') {
-  return a.toLowerCase() < b.toLowerCase() ? 1 : -1;
+  return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
 }
 
 class TypeError {}
