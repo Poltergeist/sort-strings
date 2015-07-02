@@ -45,6 +45,15 @@ describe('Sort CSV', () => {
 
     assert.equal(splitColumns(line).length, 4);
   });
+  describe('sortAlphanumeric', () => {
+    it('should return 1 if a and b are passed to the function',() => {
+      assert.equal(sortAlphanumeric('a', 'b'), 1);
+    });
+
+    it('should return -1 if b and a are passed to the function',() => {
+      assert.equal(sortAlphanumeric('b', 'a'), -1);
+    });
+  })
   describe('Sorting', () => {
     it('should return an array', () => {
       assert.ok(sortCSV(fixture) instanceof Array);
@@ -54,6 +63,11 @@ describe('Sort CSV', () => {
       let emptyString = '';
       assert.ok(sortCSV(emptyString) instanceof Array);
     });
+
+    it('should sort second CSV column alpha numeric', () => {
+      let result = sortCSV(fixture);
+      assert.equal(result[0][1], 'Borussia Dortmund');
+    });
   });
 });
 
@@ -61,17 +75,17 @@ function sortCSV(csv) {
   if (typeof csv != 'string') {
     throw new TypeError();
   }
-  const lines = splitLines(csv);
-  lines.forEach((line) => {
-    line = splitColumns(line);
-  });
-  return lines;
+  let lines = splitLines(csv);
+  return lines.map(splitColumns);
 }
 function splitLines(lines='') {
   return lines.split('\n');
 }
 function splitColumns(line) {
   return line.split(',');
+}
+function sortAlphanumeric(a='zzz', b='zzz') {
+  return a.toLowerCase() < b.toLowerCase() ? 1 : -1;
 }
 
 class TypeError {}
