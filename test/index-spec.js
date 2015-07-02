@@ -53,6 +53,13 @@ describe('Sort CSV', () => {
     it('should return -1 if b and a are passed to the function',() => {
       assert.equal(sortAlphanumeric('b', 'a'), -1);
     });
+    it('should return 1 if A and B are passed to the function',() => {
+      assert.equal(sortAlphanumeric('A', 'B'), 1);
+    });
+
+    it('should return -1 if B and A are passed to the function',() => {
+      assert.equal(sortAlphanumeric('B', 'A'), -1);
+    });
   })
   describe('Sorting', () => {
     it('should return an array', () => {
