@@ -26,6 +26,10 @@ describe('Sort CSV', () => {
   it('should throw a TypeError if a integer is provided', () => {
     assert.throws(() => sortCSV(10), TypeError);
   });
+
+  it('should accept a string and not throw a TypeError', () => {
+    assert.doesNotThrow(() => sortCSV(fixture));
+  });
 });
 
 function sortCSV(csv) {
