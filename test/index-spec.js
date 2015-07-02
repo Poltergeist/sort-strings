@@ -19,7 +19,6 @@ describe('Default', () => {
 });
 
 describe('Sort CSV', () => {
-  let fixture = fs.readFileSync('fixture/csv-list.csv').toString();
 
   describe('takes arguments and', () => {
     it('should throw a TypeError if nothing is provided', () => {
@@ -31,14 +30,20 @@ describe('Sort CSV', () => {
     });
 
     it('should accept a string and not throw a TypeError', () => {
-      assert.doesNotThrow(() => sortCSVBySecondColumn(fixture));
+      assert.doesNotThrow(() => sortCSVBySecondColumn(
+        "a,b,c\n" +
+        "b,c,a\n"
+      ));
     });
 
   });
 
   describe('Sorting by second column', () => {
     it('should return an array', () => {
-      assert.ok(sortCSVBySecondColumn(fixture) instanceof Array);
+      assert.ok(sortCSVBySecondColumn(
+        "a,b,c\n" +
+        "b,c,a\n"
+      ) instanceof Array);
     });
 
     it('should return an array even is input is an empty string', () => {
