@@ -19,16 +19,26 @@ describe('Default', () => {
 
 describe('Sort CSV', () => {
   let fixture = fs.readFileSync('fixture/csv-list.csv').toString();
-  it('should throw a TypeError if nothing is provided', () => {
-    assert.throws(sortCSV, TypeError);
-  });
+  describe('takes arguments and', () => {
+    it('should throw a TypeError if nothing is provided', () => {
+      assert.throws(sortCSV, TypeError);
+    });
 
-  it('should throw a TypeError if a integer is provided', () => {
-    assert.throws(() => sortCSV(10), TypeError);
-  });
+    it('should throw a TypeError if a integer is provided', () => {
+      assert.throws(() => sortCSV(10), TypeError);
+    });
 
-  it('should accept a string and not throw a TypeError', () => {
-    assert.doesNotThrow(() => sortCSV(fixture));
+    it('should accept a string and not throw a TypeError', () => {
+      assert.doesNotThrow(() => sortCSV(fixture));
+    });
+  });
+  describe('Split Lines', () => {
+    it('should split a String with multiple lines into an array', () => {
+      let csv = `This is a little
+      test of splitting`;
+
+      assert.equal(splitLines(csv).length, 2);
+    });
   });
 });
 
@@ -36,6 +46,9 @@ function sortCSV(csv) {
   if (typeof csv != 'string') {
     throw new TypeError();
   }
+}
+function splitLines(lines='') {
+  return lines.split('\n');
 }
 
 class TypeError {}
