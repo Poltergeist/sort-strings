@@ -49,6 +49,11 @@ describe('Sort CSV', () => {
     it('should return an array', () => {
       assert.ok(sortCSV(fixture) instanceof Array);
     });
+
+    it('should return an array even is input is an empty string', () => {
+      let emptyString = '';
+      assert.ok(sortCSV(emptyString) instanceof Array);
+    });
   });
 });
 
