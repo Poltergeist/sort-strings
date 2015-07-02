@@ -1,25 +1,19 @@
-export function sortCSV(csv) {
+export function sortCSVBySecondColumn(csv) {
   if (typeof csv != 'string') {
     throw new TypeError();
   }
-  let lines = splitLines(csv);
-  lines = lines.map(splitColumns);
+  let lines = csv.split('\n');
+  lines = lines.map((line) => line.split(','));
   lines = lines.filter(String);
   lines = lines.sort((a, b) => {
     if(a[1] == b[1]) {
-      return sortAlphanumeric(a[0], b[0]);
+      return sortByName(a[0], b[0]);
     }
-    return sortAlphanumeric(a[1], b[1]);
+    return sortByName(a[1], b[1]);
   });
   return lines;
 }
-export function splitLines(lines='') {
-  return lines.split('\n');
-}
-export function splitColumns(line) {
-  return line.split(',');
-}
-export function sortAlphanumeric(a='zzz', b='zzz') {
+function sortByName(a, b) {
   return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
 }
 

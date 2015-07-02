@@ -8,7 +8,7 @@
 import assert from 'assert'
 import fs from 'fs'
 import sinon from 'sinon'
-import {sortCSV, splitColumns, splitLines, TypeError, sortAlphanumeric} from '../src/index.js'
+import {sortCSVBySecondColumn, TypeError} from '../src/index.js'
 
 assert.calledWith = sinon.calledWith;
 
@@ -20,76 +20,52 @@ describe('Default', () => {
 
 describe('Sort CSV', () => {
   let fixture = fs.readFileSync('fixture/csv-list.csv').toString();
+
   describe('takes arguments and', () => {
     it('should throw a TypeError if nothing is provided', () => {
-      assert.throws(sortCSV, TypeError);
+      assert.throws(sortCSVBySecondColumn, TypeError);
     });
 
     it('should throw a TypeError if a integer is provided', () => {
-      assert.throws(() => sortCSV(10), TypeError);
+      assert.throws(() => sortCSVBySecondColumn(10), TypeError);
     });
 
     it('should accept a string and not throw a TypeError', () => {
-      assert.doesNotThrow(() => sortCSV(fixture));
+      assert.doesNotThrow(() => sortCSVBySecondColumn(fixture));
     });
+
   });
-  describe('Split Lines', () => {
-    it('should split a String with multiple lines into an array', () => {
-      let csv = `This is a little
-      test of splitting`;
 
-      assert.equal(splitLines(csv).length, 2);
-    });
-  });
-  describe('Split Columns', () => {
-    let line = 'this, is, a, line';
-
-    assert.equal(splitColumns(line).length, 4);
-  });
-  describe('sortAlphanumeric', () => {
-    it('should return -1 if a and b are passed to the function',() => {
-      assert.equal(sortAlphanumeric('a', 'b'), -1);
-    });
-
-    it('should return 1 if b and a are passed to the function',() => {
-      assert.equal(sortAlphanumeric('b', 'a'), 1);
-    });
-    it('should return -1 if A and B are passed to the function',() => {
-      assert.equal(sortAlphanumeric('A', 'B'), -1);
-    });
-
-    it('should return 1 if B and A are passed to the function',() => {
-      assert.equal(sortAlphanumeric('B', 'A'), 1);
-    });
-  })
-  describe('Sorting', () => {
+  describe('Sorting by second column', () => {
     it('should return an array', () => {
-      assert.ok(sortCSV(fixture) instanceof Array);
+      assert.ok(sortCSVBySecondColumn(fixture) instanceof Array);
     });
 
     it('should return an array even is input is an empty string', () => {
       let emptyString = '';
-      assert.ok(sortCSV(emptyString) instanceof Array);
+      assert.ok(sortCSVBySecondColumn(emptyString) instanceof Array);
     });
 
-    it('should sort second CSV column alpha numeric', () => {
-      let result = sortCSV(fixture);
-      let lastItem = '0'
-      result.forEach((item) => {
-        assert.ok(item[1].toLowerCase() >= lastItem.toLowerCase());
-        lastItem = item[1];
-      });
+    it('should sort second CSV column by letter', () => {
+      let result = sortCSVBySecondColumn("a,b,c\n" +
+        "b,c,a\n" +
+        "c,a,b\n");
+      assert.equal(result[0][0], 'c');
     });
 
-    it('should sort first CSV column after the second column alpha numeric', () => {
-      let result = sortCSV(fixture);
-      let lastItem = ['0','0']
-      result.forEach((item, index) => {
-        if(item[1] == lastItem[1]){
-          assert.ok(item[0].toLowerCase() >= lastItem[0].toLowerCase());
-        }
-        lastItem = item;
-      });
+    it('should sort first CSV column after the second column by letter', () => {
+      let result = sortCSVBySecondColumn("a,b,c\n" +
+        "b,c,a\n" +
+        "c,a,b\n" +
+        "a,a,b\n");
+      assert.equal(result[0][0], 'a');
     });
+
+    it('last element should not be empty', () =>{
+      let result = sortCSVBySecondColumn("a,b,c\n" +
+        "a,a,b\n");
+      assert.equal(result.length, 2);
+
+    })
   });
 });
