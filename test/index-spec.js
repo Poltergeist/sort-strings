@@ -19,8 +19,12 @@ describe('Default', () => {
 
 describe('Sort CSV', () => {
   let fixture = fs.readFileSync('fixture/csv-list.csv').toString();
-  it('should accept only a string as a parameter', () => {
+  it('should throw a TypeError if nothing is provided', () => {
     assert.throws(sortCSV, TypeError);
+  });
+
+  it('should throw a TypeError if a integer is provided', () => {
+    assert.throws(() => sortCSV(10), TypeError);
   });
 });
 
