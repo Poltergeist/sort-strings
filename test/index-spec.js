@@ -75,7 +75,18 @@ describe('Sort CSV', () => {
       let result = sortCSV(fixture);
       let lastItem = '0'
       result.forEach((item) => {
-        assert.ok(item[1].toLowerCase() >= lastItem);
+        assert.ok(item[1].toLowerCase() >= lastItem.toLowerCase());
+        lastItem = item[1];
+      });
+    });
+
+    it('should sort first CSV column after the second column alpha numeric', () => {
+      let result = sortCSV(fixture);
+      let lastItem = ['0','0']
+      result.forEach((item, index) => {
+        if(item[1] == lastItem[1]){
+          assert.ok(item[0].toLowerCase() >= lastItem[0].toLowerCase());
+        }
         lastItem = item;
       });
     });
@@ -88,10 +99,13 @@ function sortCSV(csv) {
   }
   let lines = splitLines(csv);
   lines = lines.map(splitColumns);
+  lines = lines.filter(String);
   lines = lines.sort((a, b) => {
+    if(a[1] == b[1]) {
+      return sortAlphanumeric(a[0], b[0]);
+    }
     return sortAlphanumeric(a[1], b[1]);
   });
-  lines = lines.filter(String);
   return lines;
 }
 function splitLines(lines='') {
